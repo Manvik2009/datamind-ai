@@ -6,14 +6,15 @@ let supabaseInstance: SupabaseClient | null = null;
 const createMockSupabase = (): SupabaseClient => {
   const mockBuilder = {
     select: () => mockBuilder,
-    insert: () => mockBuilder,
+    insert: () => Promise.resolve({ data: null, error: null }),
     update: () => mockBuilder,
     delete: () => mockBuilder,
     eq: () => mockBuilder,
-    order: () => mockBuilder,
+    order: () => Promise.resolve({ data: [], error: null }),
     limit: () => mockBuilder,
     single: async () => ({ data: null, error: { code: 'PGRST116', message: 'No rows found' } }),
     maybeSingle: async () => ({ data: null, error: { code: 'PGRST116', message: 'No rows found' } }),
+    then: (resolve: any) => resolve({ data: [], error: null }),
   };
 
   return {
@@ -37,9 +38,9 @@ export const getSupabase = (): SupabaseClient => {
   const url = env.SUPABASE_URL;
   const key = env.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_ANON_KEY;
 
-  if (!url || !key || url.includes('your-project')) {
+  if (!url || !key || url.includes('your-project') || url.includes('mock-supabase') || key.includes('mock-')) {
     if (env.NODE_ENV === 'development') {
-      console.warn('Supabase not configured. Using mock client. Set SUPABASE_URL and SUPABASE_ANON_KEY in .env');
+      console.warn('Supabase not configured. Using mock client. Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env');
       supabaseInstance = createMockSupabase();
       return supabaseInstance;
     }
