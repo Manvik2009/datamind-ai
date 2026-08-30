@@ -9,11 +9,11 @@ interface AISettingsProps {
 }
 
 export const AISettings = ({ settings, onUpdate, onSuccess }: AISettingsProps) => {
-  const [responseStyle, setResponseStyle] = useState(settings.ai_response_style);
-  const [detailLevel, setDetailLevel] = useState(settings.ai_detail_level);
-  const [explainResults, setExplainResults] = useState(settings.ai_explain_results);
-  const [showLimitations, setShowLimitations] = useState(settings.ai_show_limitations);
-  const [askBeforeExpensive, setAskBeforeExpensive] = useState(settings.ai_ask_before_expensive);
+  const [responseStyle, setResponseStyle] = useState(settings?.ai_response_style ?? 'balanced');
+  const [detailLevel, setDetailLevel] = useState(settings?.ai_detail_level ?? 'standard');
+  const [explainResults, setExplainResults] = useState(settings?.ai_explain_results ?? true);
+  const [showLimitations, setShowLimitations] = useState(settings?.ai_show_limitations ?? true);
+  const [askBeforeExpensive, setAskBeforeExpensive] = useState(settings?.ai_ask_before_expensive ?? true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

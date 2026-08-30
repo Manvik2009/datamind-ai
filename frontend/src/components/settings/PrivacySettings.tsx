@@ -9,8 +9,8 @@ interface PrivacySettingsProps {
 }
 
 export const PrivacySettings = ({ settings, onUpdate, onSuccess }: PrivacySettingsProps) => {
-  const [analyticsOptOut, setAnalyticsOptOut] = useState(settings.analytics_opt_out);
-  const [activityVisibility, setActivityVisibility] = useState(settings.activity_visibility);
+  const [analyticsOptOut, setAnalyticsOptOut] = useState(settings?.analytics_opt_out ?? false);
+  const [activityVisibility, setActivityVisibility] = useState(settings?.activity_visibility ?? 'private');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

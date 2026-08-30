@@ -8,8 +8,8 @@ interface ProfileSettingsProps {
 }
 
 export const ProfileSettings = ({ settings, onUpdate }: ProfileSettingsProps) => {
-  const [timezone, setTimezone] = useState(settings.timezone);
-  const [language, setLanguage] = useState(settings.language);
+  const [timezone, setTimezone] = useState(settings?.timezone ?? 'UTC');
+  const [language, setLanguage] = useState(settings?.language ?? 'en');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

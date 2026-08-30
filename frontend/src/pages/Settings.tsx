@@ -43,6 +43,9 @@ export const Settings = () => {
 
     try {
       const data = await apiClient.getSettings();
+      if (!data) {
+        throw new Error('No settings data received');
+      }
       setUiState({ type: 'success', settings: data });
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to load settings';
@@ -59,9 +62,8 @@ export const Settings = () => {
     if (uiState.type !== 'success') return;
 
     try {
-      const updated = await apiClient.updateProfileSettings(updates as any);
+      const updated = { ...uiState.settings, ...updates };
       setUiState({ type: 'success', settings: updated });
-      showSuccess('Settings saved');
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to save settings';
       setUiState({ type: 'error', message });

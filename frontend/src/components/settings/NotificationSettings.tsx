@@ -19,7 +19,14 @@ const notificationCategories = [
 
 export const NotificationSettings = ({ settings, onUpdate, onSuccess }: NotificationSettingsProps) => {
   const [preferences, setPreferences] = useState<NotificationPreferences>(
-    settings.notification_preferences
+    settings?.notification_preferences ?? {
+      analysis_completed: { in_app: true, email: false },
+      model_training_completed: { in_app: true, email: false },
+      agent_completed: { in_app: true, email: false },
+      report_generated: { in_app: true, email: false },
+      job_failed: { in_app: true, email: true },
+      security_events: { in_app: true, email: true },
+    }
   );
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);

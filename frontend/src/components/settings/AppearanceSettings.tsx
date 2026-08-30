@@ -9,9 +9,9 @@ interface AppearanceSettingsProps {
 }
 
 export const AppearanceSettings = ({ settings, onUpdate, onSuccess }: AppearanceSettingsProps) => {
-  const [theme, setTheme] = useState(settings.theme);
-  const [reducedMotion, setReducedMotion] = useState(settings.reduced_motion);
-  const [compactDensity, setCompactDensity] = useState(settings.compact_density);
+  const [theme, setTheme] = useState(settings?.theme ?? 'system');
+  const [reducedMotion, setReducedMotion] = useState(settings?.reduced_motion ?? false);
+  const [compactDensity, setCompactDensity] = useState(settings?.compact_density ?? false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
