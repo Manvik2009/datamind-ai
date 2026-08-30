@@ -4,17 +4,69 @@ import { getEnv } from './env.js';
 let supabaseInstance: SupabaseClient | null = null;
 
 const createMockSupabase = (): SupabaseClient => {
+  let insertedData: Record<string, unknown> | null = null;
+
   const mockBuilder = {
-    select: () => mockBuilder,
-    insert: () => Promise.resolve({ data: null, error: null }),
-    update: () => mockBuilder,
-    delete: () => mockBuilder,
-    eq: () => mockBuilder,
-    order: () => Promise.resolve({ data: [], error: null }),
-    limit: () => mockBuilder,
-    single: async () => ({ data: null, error: { code: 'PGRST116', message: 'No rows found' } }),
-    maybeSingle: async () => ({ data: null, error: { code: 'PGRST116', message: 'No rows found' } }),
-    then: (resolve: any) => resolve({ data: [], error: null }),
+    select: () => {
+      if (insertedData) {
+        return {
+          single: async () => ({ data: insertedData, error: null }),
+          then: (resolve: any) => resolve({ data: [insertedData], error: null }),
+        };
+      }
+      return {
+        single: async () => ({ data: null, error: { code: 'PGRST116', message: 'No rows found' } }),
+        then: (resolve: any) => resolve({ data: [], error: null }),
+      };
+    },
+    insert: (data: Record<string, unknown>) => {
+      insertedData = { ...data, id: data.id || 'mock-id-' + Date.now() };
+      return {
+        select: () => ({
+          single: async () => ({ data: insertedData, error: null }),
+          then: (resolve: any) => resolve({ data: [insertedData], error: null }),
+        }),
+        then: (resolve: any) => resolve({ data: insertedData, error: null }),
+      };
+    },
+    update: () => ({
+      select: () => ({
+        single: async () => ({ data: insertedData, error: null }),
+        then: (resolve: any) => resolve({ data: [insertedData], error: null }),
+      }),
+      then: (resolve: any) => resolve({ data: insertedData, error: null }),
+    }),
+    delete: () => ({
+      then: (resolve: any) => resolve({ data: null, error: null }),
+    }),
+    eq: () => ({
+      single: async () => {
+        if (insertedData) {
+          return { data: insertedData, error: null };
+        }
+        return { data: null, error: { code: 'PGRST116', message: 'No rows found' } };
+      },
+      then: (resolve: any) => resolve({ data: insertedData ? [insertedData] : [], error: null }),
+    }),
+    order: () => ({
+      then: (resolve: any) => resolve({ data: insertedData ? [insertedData] : [], error: null }),
+    }),
+    limit: () => ({
+      single: async () => {
+        if (insertedData) {
+          return { data: insertedData, error: null };
+        }
+        return { data: null, error: { code: 'PGRST116', message: 'No rows found' } };
+      },
+      then: (resolve: any) => resolve({ data: insertedData ? [insertedData] : [], error: null }),
+    }),
+    maybeSingle: async () => {
+      if (insertedData) {
+        return { data: insertedData, error: null };
+      }
+      return { data: null, error: null };
+    },
+    then: (resolve: any) => resolve({ data: insertedData ? [insertedData] : [], error: null }),
   };
 
   return {
