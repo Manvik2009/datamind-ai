@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: datamind-ai-api
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: CORS_ORIGIN
+        value: https://datamind-ai-platform.web.app
+      - key: FRONTEND_URL
+        value: https://datamind-ai-platform.web.app
+      - key: AI_PROVIDER
+        value: mock
+      - key: LOG_LEVEL
+        value: info

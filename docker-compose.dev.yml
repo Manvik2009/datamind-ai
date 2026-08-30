@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:4000
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+    networks:
+      - datamind-dev-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=development
+      - PORT=4000
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - AI_API_KEY=${AI_API_KEY}
+      - AI_PROVIDER=${AI_PROVIDER:-mock}
+      - AI_MODEL=${AI_MODEL:-gpt-4}
+      - PYTHON_SERVICE_URL=http://ml-service:5001
+      - FRONTEND_URL=http://localhost:5173
+      - CORS_ORIGIN=http://localhost:5173
+      - JWT_SECRET=dev-jwt-secret-do-not-use-in-production
+      - LOG_LEVEL=debug
+    depends_on:
+      - ml-service
+    volumes:
+      - ./backend/src:/app/src
+      - uploads:/app/uploads
+    networks:
+      - datamind-dev-network
+
+  ml-service:
+    build:
+      context: ./ml-service
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5001:5001"
+    environment:
+      - UPLOAD_DIR=/tmp/datamind-uploads
+      - MODEL_DIR=/tmp/datamind-models
+    volumes:
+      - ./ml-service:/app
+      - ml-models:/tmp/datamind-models
+      - ml-uploads:/tmp/datamind-uploads
+    networks:
+      - datamind-dev-network
+
+networks:
+  datamind-dev-network:
+    driver: bridge
+
+volumes:
+  uploads:
+  ml-models:
+  ml-uploads:

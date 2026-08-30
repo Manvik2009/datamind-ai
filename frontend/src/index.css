@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-background: 15 23 42;
+    --color-foreground: 248 250 252;
+    --color-primary: 99 102 241;
+    --color-primary-foreground: 255 255 255;
+    --color-secondary: 30 41 59;
+    --color-secondary-foreground: 248 250 252;
+    --color-accent: 139 92 246;
+    --color-accent-foreground: 255 255 255;
+    --color-muted: 51 65 85;
+    --color-muted-foreground: 148 163 184;
+    --color-card: 30 41 59;
+    --color-card-foreground: 248 250 252;
+    --color-border: 51 65 85;
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.2s ease-out;
+  }
+  .animate-slide-up {
+    animation: slideUp 0.2s ease-out;
+  }
+  .animate-scale-in {
+    animation: scaleIn 0.15s ease-out;
+  }
+  .skeleton {
+    @apply animate-pulse rounded bg-muted/50;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
