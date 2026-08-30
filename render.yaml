@@ -9,7 +9,7 @@ services:
     healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
-        value: production
+        value: development
       - key: PORT
         value: 10000
       - key: CORS_ORIGIN
@@ -20,3 +20,11 @@ services:
         value: mock
       - key: LOG_LEVEL
         value: info
+      - key: SUPABASE_URL
+        value: https://mock-supabase.supabase.co
+      - key: SUPABASE_ANON_KEY
+        value: mock-anon-key
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        value: mock-service-role-key
+      - key: JWT_SECRET
+        value: mock-jwt-secret-for-development-only-32chars
