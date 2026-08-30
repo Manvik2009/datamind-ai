@@ -120,7 +120,7 @@ export const apiClient = {
   },
 
   patch: async <T>(path: string, body?: unknown): Promise<T> => {
-    const response = await fetch(`${API_BASE_URL}${path}`, {
+    const response = await fetchWithAuth(`${API_BASE_URL}${path}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: body ? JSON.stringify(body) : undefined,
